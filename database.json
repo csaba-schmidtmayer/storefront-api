@@ -1,0 +1,11 @@
+{
+  "dev": {
+    "driver": "pg",
+    "user": {"ENV": "DEV_USERNAME"},
+    "password": {"ENV": "DEV_PASSWORD"},
+    "host": "localhost",
+    "database": "storefront",
+    "port": {"ENV": "DEV_PORT"}
+  },
+  "sql-file": true
+}
