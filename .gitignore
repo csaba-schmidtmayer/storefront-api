@@ -29,5 +29,8 @@ _ReSharper*/
 .vs/
 #Nuget packages folder
 packages/
+
+#Custom ignores
 node_modules/
+build/
 .env
