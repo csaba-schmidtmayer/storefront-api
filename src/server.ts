@@ -1,12 +1,16 @@
 import express from 'express';
 import cors from 'cors';
 
+import categories from './routes/categories';
+
 const app = express();
 
 // Global middleware
 app.use(cors());
 
 // Routes
+app.use('/categories', categories);
+
 app.get('*', (req, res) => {
   res.json('works').send();
 });
