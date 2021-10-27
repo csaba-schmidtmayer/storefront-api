@@ -7,6 +7,7 @@ const app = express();
 
 // Global middleware
 app.use(cors());
+app.use(express.json());
 
 // Routes
 app.use('/categories', categories);
