@@ -15,7 +15,15 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
 });
 
 router.post('/', async (req: Request, res: Response): Promise<void> => {
-  await create('\'; drop table cats; --')
+  const { name } = req.body;
+
+  if (name === undefined) {
+    res.send('Attribute \'name\' must be supplied in the body.');
+  }
+  else {
+    const newCategory = await create(name);
+    res.send(newCategory);
+  }
 });
 
 export default router;

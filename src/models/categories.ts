@@ -38,8 +38,9 @@ const show = async (id: string): Promise<Category> => {
 };
 
 const create = async (name: string): Promise<Category> => {
-  const name_norm = name.substr(0, 1).toUpperCase() + name.substr(1).toLowerCase();
-  const sql = `INSERT INTO categories ${name_norm}`;
+  const nameNorm = name.toLowerCase();
+  const sql = `INSERT INTO categories (name) VALUES ('${nameNorm}') RETURNING *;`;
+  console.log(sql);
 
   try {
     const conn = await db_client.connect();
@@ -52,7 +53,7 @@ const create = async (name: string): Promise<Category> => {
   catch (err) {
     throw new Error(`Could not get categories. Error: ${err}`);
   }
-}
+};
 
 export {
   Category,
