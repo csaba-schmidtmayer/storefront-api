@@ -3,6 +3,7 @@ import cors from 'cors';
 
 import categories from './routes/categories';
 import products from './routes/products';
+import users from './routes/users';
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 // Routes
 app.use('/categories', categories);
 app.use('/products', products);
+app.use('/users', users);
 
 app.get('*', (req, res) => {
   res.json('works').send();
