@@ -1,10 +1,13 @@
 import { Router, Request, Response } from 'express';
-import { index, show, create } from '../models/products';
+import { index, show, create, categoryIndex } from '../models/products';
 
 const router = Router();
 
-router.get('/', async (_req: Request, res: Response): Promise<void> => {
-  const products = await index();
+router.get('/', async (req: Request, res: Response): Promise<void> => {
+  const { category } = req.query;
+  const products = category
+    ? await categoryIndex(parseInt(category as string))
+    : await index();
   res.send(products);
 });
 
