@@ -7,7 +7,7 @@ type User = {
 }
 
 const index = async (): Promise<User[]> => {
-  const sql = `SELECT (id, first_name, last_name) FROM users;`;
+  const sql = `SELECT id, first_name, last_name FROM users;`;
 
   try {
     const conn = await db_client.connect();
@@ -27,7 +27,7 @@ const index = async (): Promise<User[]> => {
 };
 
 const show = async (id: string): Promise<User> => {
-  const sql = `SELECT (id, first_name, last_name) FROM users WHERE id = ${id};`;
+  const sql = `SELECT id, first_name, last_name FROM users WHERE id = '${id}';`;
 
   try {
     const conn = await db_client.connect();
