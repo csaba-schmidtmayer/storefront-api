@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 import db_client from '../db_conn';
 
 type User = {
@@ -48,7 +50,13 @@ const show = async (id: string): Promise<User> => {
 };
 
 const create = async(user: User): Promise<User> => {
-  const sql = `INSERT INTO users VALUES ('${user.id}', '${user.firstName}', '${user.lastName}', '${user.password}') RETURNING id, first_name, last_name;`;
+  const { id, firstName, lastName, password} = user;
+  if (id === undefined || firstName === undefined || lastName === undefined || password === undefined) {
+    throw new Error('All attributes must be provided in a user object.');
+  }
+
+  const hash = await bcrypt.hash(user.password as string + process.env.PWD_HASH_SECRET, parseInt(process.env.SALT_ROUNDS as string))
+  const sql = `INSERT INTO users VALUES ('${id}', '${firstName}', '${lastName}', '${hash}') RETURNING id, first_name, last_name;`;
 
   try {
     const conn = await db_client.connect();
