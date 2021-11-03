@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 
-import { index, show, create } from '../models/users';
+import { index, show, create, login } from '../models/users';
 
 const router = Router();
 
@@ -25,6 +25,19 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     const newUser = await create(user);
     res.send(newUser);
   }
-})
+});
+
+router.post('/:id', async(req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const { password } = req.body;
+
+  if (password === undefined) {
+    res.send('Password must be supplied in the body.');
+  }
+  else {
+    const token = await login(id, password);
+    res.send(token);
+  }
+});
 
 export default router;
