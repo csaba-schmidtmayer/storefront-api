@@ -14,6 +14,11 @@ type Order = {
   basketValue: number
 };
 
+type OrderItem = {
+  productId: number,
+  quantity: number
+};
+
 const _parseOrders = (userId: string, isActive: boolean, result: QueryResult<any>): Order[] => {
   type OrderDict = {
     [key: string]: Order
@@ -49,12 +54,13 @@ const _parseOrders = (userId: string, isActive: boolean, result: QueryResult<any
   return Object.keys(orderDict).map((key) => (orderDict[key]));
 };
 
-const _showOrder = async (userId: string, isActive: boolean): Promise<Order[]> => {
+const _showOrder = async (userId: string, isActive: boolean, orderId?: number): Promise<Order[]> => {
   const sql = `SELECT orders.id AS order_id, products.*, categories.name AS category_name, order_items.quantity FROM orders ` +
     `INNER JOIN order_items ON orders.id = order_items.order_id ` +
     `INNER JOIN products ON order_items.product_id = products.id ` +
-    `INNER JOIN categories ON products.category_id = categories.id `+
-    `WHERE orders.user_id = '${userId}' AND orders.is_active = ${isActive};`;
+    `INNER JOIN categories ON products.category_id = categories.id ` +
+    `WHERE orders.user_id = '${userId}' AND orders.is_active = ${isActive}` +
+    `${orderId ? ' AND orders.id = ' + orderId : ''};`;
 
   try {
     const conn = await db_client.connect();
@@ -77,8 +83,32 @@ const showCompleted = async (userId: string): Promise<Order[]> => {
   return await _showOrder(userId, false);
 };
 
+const create = async (userId: string, orderItems: OrderItem[]): Promise<Order> => {
+  const orderSql = `INSERT INTO orders (user_id, is_active) VALUES ('${userId}', true) RETURNING id;`
+
+  try {
+    const conn = await db_client.connect();
+    const orderResult = await conn.query(orderSql);
+    const { id: orderId } = orderResult.rows[0];
+
+    const orderItemsSql = orderItems.reduce((prev, current) => {
+      return prev + `INSERT INTO order_items VALUES (${orderId}, ${current.productId}, ${current.quantity});`
+    }, '');
+    await conn.query(orderItemsSql);
+
+    conn.release();
+
+    const newOrder = await _showOrder(userId, true, orderId);
+    return newOrder[0];
+  }
+  catch (err) {
+    throw new Error(`Could not get orders. Error: ${err}`);
+  }
+};
+
 export {
   Order,
   showActive,
-  showCompleted
+  showCompleted,
+  create
 };
