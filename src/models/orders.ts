@@ -49,12 +49,12 @@ const _parseOrders = (userId: string, isActive: boolean, result: QueryResult<any
   return Object.keys(orderDict).map((key) => (orderDict[key]));
 };
 
-const showActive = async (userId: string): Promise<Order[]> => {
+const _showOrder = async (userId: string, isActive: boolean): Promise<Order[]> => {
   const sql = `SELECT orders.id AS order_id, products.*, categories.name AS category_name, order_items.quantity FROM orders ` +
     `INNER JOIN order_items ON orders.id = order_items.order_id ` +
     `INNER JOIN products ON order_items.product_id = products.id ` +
     `INNER JOIN categories ON products.category_id = categories.id `+
-    `WHERE orders.user_id = '${userId}' AND orders.is_active = true;`;
+    `WHERE orders.user_id = '${userId}' AND orders.is_active = ${isActive};`;
 
   try {
     const conn = await db_client.connect();
@@ -62,31 +62,19 @@ const showActive = async (userId: string): Promise<Order[]> => {
 
     conn.release();
 
-    return _parseOrders(userId, true, result);
+    return _parseOrders(userId, isActive, result);
   }
   catch (err) {
     throw new Error(`Could not get orders. Error: ${err}`);
   }
+}
+
+const showActive = async (userId: string): Promise<Order[]> => {
+  return await _showOrder(userId, true);
 };
 
 const showCompleted = async (userId: string): Promise<Order[]> => {
-  const sql = `SELECT orders.id AS order_id, products.*, categories.name AS category_name, order_items.quantity FROM orders ` +
-    `INNER JOIN order_items ON orders.id = order_items.order_id ` +
-    `INNER JOIN products ON order_items.product_id = products.id ` +
-    `INNER JOIN categories ON products.category_id = categories.id `+
-    `WHERE orders.user_id = '${userId}' AND orders.is_active = false;`;
-
-  try {
-    const conn = await db_client.connect();
-    const result = await conn.query(sql);
-
-    conn.release();
-
-    return _parseOrders(userId, false, result);
-  }
-  catch (err) {
-    throw new Error(`Could not get orders. Error: ${err}`);
-  }
+  return await _showOrder(userId, false);
 };
 
 export {
