@@ -1,8 +1,11 @@
 import { Router, Request, Response } from 'express';
 
 import { index, show, create, login } from '../models/users';
+import orders from './orders';
 
 const router = Router();
+
+router.use('/:id/orders', orders);
 
 router.get('/', async (_req: Request, res: Response): Promise<void> => {
   const users = await index();
