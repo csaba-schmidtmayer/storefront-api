@@ -69,7 +69,28 @@ const showActive = async (userId: string): Promise<Order[]> => {
   }
 };
 
+const showCompleted = async (userId: string): Promise<Order[]> => {
+  const sql = `SELECT orders.id AS order_id, products.*, categories.name AS category_name, order_items.quantity FROM orders ` +
+    `INNER JOIN order_items ON orders.id = order_items.order_id ` +
+    `INNER JOIN products ON order_items.product_id = products.id ` +
+    `INNER JOIN categories ON products.category_id = categories.id `+
+    `WHERE orders.user_id = '${userId}' AND orders.is_active = false;`;
+
+  try {
+    const conn = await db_client.connect();
+    const result = await conn.query(sql);
+
+    conn.release();
+
+    return _parseOrders(userId, false, result);
+  }
+  catch (err) {
+    throw new Error(`Could not get orders. Error: ${err}`);
+  }
+};
+
 export {
   Order,
-  showActive
+  showActive,
+  showCompleted
 };
