@@ -98,10 +98,42 @@ const categoryIndex = async (category: number): Promise<Product[]> => {
   }
 };
 
+const showPopular = async (category: number | undefined): Promise<Product[]> => {
+  const showLimit = 5;
+  const sql = `SELECT products.*, SUM (order_items.quantity) AS summed_quantity FROM products ` +
+    `INNER JOIN order_items ON products.id = order_items.product_id ` +
+    `${category ? 'WHERE products.category_id = ' + category : ''}` +
+    `GROUP BY products.id ` +
+    `ORDER BY summed_quantity DESC ` +
+    `LIMIT ${showLimit};`;
+  console.log(sql);
+
+  try {
+    const conn = await db_client.connect();
+    const result = await conn.query(sql);
+
+    conn.release();
+
+    return result.rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      price: row.price,
+      category: {
+        id: row.category_id,
+        name: row.category_name
+      }
+    }));
+  }
+  catch (err) {
+    throw new Error(`Could not get products. Error: ${err}`);
+  }
+};
+
 export {
   Product,
   index,
   show,
   create,
-  categoryIndex
+  categoryIndex,
+  showPopular
 }
