@@ -1,13 +1,15 @@
 import { Router, Request, Response } from 'express';
-import { index, show, create, categoryIndex } from '../models/products';
+import { index, show, create, categoryIndex, showPopular } from '../models/products';
 
 const router = Router();
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
-  const { category } = req.query;
-  const products = category
-    ? await categoryIndex(parseInt(category as string))
-    : await index();
+  const { popular, category } = req.query;
+  const products = popular
+    ? await showPopular(parseInt(category as string))
+    : category
+      ? await categoryIndex(parseInt(category as string))
+      : await index();
   res.send(products);
 });
 
