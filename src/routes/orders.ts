@@ -1,8 +1,10 @@
 import { Router, Request, Response } from 'express';
 
 import { showActive, showCompleted, create } from '../models/orders';
+import authenticate from '../middleware/authentication';
 
 const router = Router({mergeParams: true});
+router.use(authenticate);
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   const { id: userId } = req.params;

@@ -2,23 +2,24 @@ import { Router, Request, Response } from 'express';
 
 import { index, show, create, login } from '../models/users';
 import orders from './orders';
+import authenticate from '../middleware/authentication';
 
 const router = Router();
 
 router.use('/:id/orders', orders);
 
-router.get('/', async (_req: Request, res: Response): Promise<void> => {
+router.get('/', authenticate, async (_req: Request, res: Response): Promise<void> => {
   const users = await index();
   res.send(users);
 });
 
-router.get('/:id', async (req: Request, res: Response): Promise<void> => {
+router.get('/:id', authenticate, async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const user = await show(id);
   res.send(user);
 });
 
-router.post('/', async (req: Request, res: Response): Promise<void> => {
+router.post('/', authenticate, async (req: Request, res: Response): Promise<void> => {
   const user = req.body;
 
   if (user === undefined) {
