@@ -7,5 +7,13 @@
     "database": "storefront",
     "port": {"ENV": "DEV_PORT"}
   },
+  "test": {
+    "driver": "pg",
+    "user": {"ENV": "TEST_USERNAME"},
+    "password": {"ENV": "TEST_PASSWORD"},
+    "host": "localhost",
+    "database": "storefront_test",
+    "port": {"ENV": "TEST_PORT"}
+  },
   "sql-file": true
 }
