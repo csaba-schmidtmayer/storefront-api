@@ -3,16 +3,16 @@
     "driver": "pg",
     "user": {"ENV": "DEV_USERNAME"},
     "password": {"ENV": "DEV_PASSWORD"},
-    "host": "localhost",
-    "database": "storefront",
+    "host": {"ENV": "DEV_HOST"},
+    "database": {"ENV": "DEV_DB"},
     "port": {"ENV": "DEV_PORT"}
   },
   "test": {
     "driver": "pg",
     "user": {"ENV": "TEST_USERNAME"},
     "password": {"ENV": "TEST_PASSWORD"},
-    "host": "localhost",
-    "database": "storefront_test",
+    "host": {"ENV": "TEST_HOST"},
+    "database": {"ENV": "TEST_DB"},
     "port": {"ENV": "TEST_PORT"}
   },
   "sql-file": true
