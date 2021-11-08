@@ -1,4 +1,5 @@
 {
+  "random": false,
   "reporters": [
     {
       "name": "jasmine-spec-reporter#SpecReporter",
