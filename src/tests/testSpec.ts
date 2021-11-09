@@ -2,6 +2,7 @@ import db_client from '../db_conn';
 import { User, index as userIndex, show as showUser, create as createUser, login } from '../models/users';
 import { index as categoryIndex, show as showCategory, create as createCategory } from '../models/categories';
 import { Product, index as productIndex, show as showProduct, create as createProduct, categoryIndex as productsByCategory, showPopular } from '../models/products';
+import { Order, showActive, showCompleted, create as createOrder } from '../models/orders';
 
 describe('Database and endpoint tests', () => {
   const userId = 'emmet_lego';
@@ -102,6 +103,32 @@ describe('Database and endpoint tests', () => {
       it('Shows all products by category', async () => {
         const result = await productsByCategory(categoryId);
         expect(result.length).toEqual(1);
+      });
+    });
+
+    describe('Order model tests', () => {
+
+      it('Creates a new order', async () => {
+        const result = await createOrder(userId, [{productId: productId, quantity: 2}]);
+        expect(result.basketValue).toEqual(19998);
+        expect(result.products[0].product.category.name).toEqual(categoryName);
+        expect(result.status).toEqual('active');
+      });
+
+      it('Shows completed orders', async () => {
+        const result = await showCompleted(userId);
+        expect(result.length).toEqual(0);
+      });
+
+      it('Shows active orders', async () => {
+        const result = await showActive(userId);
+        expect(result.length).toEqual(1);
+      });
+
+      // showPopular() belongs to the product model, but needs order information for its logic
+      it('Shows most popular products', async () => {
+        const result = await showPopular(undefined);
+        expect(result.length).toBeLessThanOrEqual(5);
       });
     });
   });
