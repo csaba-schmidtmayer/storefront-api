@@ -34,7 +34,6 @@ const index = async (): Promise<Product[]> => {
 
 const show = async (id: string): Promise<Product> => {
   const sql = `SELECT products.*, categories.name AS "category_name" FROM products INNER JOIN categories ON products.category_id = categories.id WHERE products.id = ${id};`;
-  console.log(id);
 
   try {
     const conn = await db_client.connect();
