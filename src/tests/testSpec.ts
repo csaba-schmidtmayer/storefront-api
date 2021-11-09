@@ -1,4 +1,7 @@
+import supertest from 'supertest';
+
 import db_client from '../db_conn';
+import app from '../server';
 import { User, index as userIndex, show as showUser, create as createUser, login } from '../models/users';
 import { index as categoryIndex, show as showCategory, create as createCategory } from '../models/categories';
 import { Product, index as productIndex, show as showProduct, create as createProduct, categoryIndex as productsByCategory, showPopular } from '../models/products';
@@ -8,7 +11,7 @@ describe('Database and endpoint tests', () => {
   const userId = 'emmet_lego';
   const categoryName = 'City';
   let categoryId: number, productId: number;
-  let token: string;
+  let token: string = 'Bearer ';
 
   beforeAll(async () => {
     // Clear database
@@ -59,7 +62,7 @@ describe('Database and endpoint tests', () => {
       });
 
       it('Performs a login', async () => {
-        token = await login(userId, password);
+        token += await login(userId, password);
         expect(token.length).toBeGreaterThan(0);
       });
     });
@@ -136,6 +139,42 @@ describe('Database and endpoint tests', () => {
       it('Shows most popular products', async () => {
         const result = await showPopular(undefined);
         expect(result.length).toBeLessThanOrEqual(5);
+      });
+    });
+  });
+
+  describe('Endpoint tests', () => {
+    const request = supertest(app);
+    const headers = {
+      'Authorization': token,
+      'Accept': 'application/json'
+    };
+
+    describe('Category endpoint tests', () => {
+
+      it('GET /categories', async () => {
+        request
+          .get('/categories')
+          .set(headers)
+          .expect('Content-Type', /json/)
+          .expect(200);
+      });
+
+      it('GET /categories/:id', async () => {
+        request
+          .post(`/categories/${categoryId}`)
+          .set(headers)
+          .expect('Content-Type', /json/)
+          .expect(200);
+      });
+
+      it('POST /categories', async () => {
+        request
+          .post('/categories')
+          .set(headers)
+          .send({'name': 'Ideas'})
+          .expect('Content-Type', /json/)
+          .expect(200);
       });
     });
   });
