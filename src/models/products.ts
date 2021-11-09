@@ -105,7 +105,6 @@ const showPopular = async (category: number | undefined): Promise<Product[]> => 
     `GROUP BY products.id ` +
     `ORDER BY summed_quantity DESC ` +
     `LIMIT ${showLimit};`;
-  console.log(sql);
 
   try {
     const conn = await db_client.connect();
