@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 
 import { index, show, create } from '../models/categories';
+import authenticate from '../middleware/authentication';
 
 const router = Router();
 
@@ -14,7 +15,7 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   res.send(category);
 });
 
-router.post('/', async (req: Request, res: Response): Promise<void> => {
+router.post('/', authenticate, async (req: Request, res: Response): Promise<void> => {
   const { name } = req.body;
 
   if (name === undefined) {
