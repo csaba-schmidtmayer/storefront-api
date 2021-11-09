@@ -38,8 +38,7 @@ const show = async (id: string): Promise<Category> => {
 };
 
 const create = async (name: string): Promise<Category> => {
-  const nameNorm = name.toLowerCase();
-  const sql = `INSERT INTO categories (name) VALUES ('${nameNorm}') RETURNING *;`;
+  const sql = `INSERT INTO categories (name) VALUES ('${name}') RETURNING *;`;
   console.log(sql);
 
   try {
