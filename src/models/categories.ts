@@ -39,7 +39,6 @@ const show = async (id: string): Promise<Category> => {
 
 const create = async (name: string): Promise<Category> => {
   const sql = `INSERT INTO categories (name) VALUES ('${name}') RETURNING *;`;
-  console.log(sql);
 
   try {
     const conn = await db_client.connect();
