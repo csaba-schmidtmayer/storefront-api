@@ -8,6 +8,7 @@ describe('Database and endpoint tests', () => {
   const userId = 'emmet_lego';
   const categoryName = 'City';
   let categoryId: number, productId: number;
+  let token: string;
 
   beforeAll(async () => {
     // Clear database
@@ -29,6 +30,7 @@ describe('Database and endpoint tests', () => {
   describe('Model tests', () => {
 
     describe('User model tests', () => {
+      const password = 'Everything1sAwsome';
       const expectedUser: User = {
         id: userId,
         firstName: 'Emmet',
@@ -40,7 +42,7 @@ describe('Database and endpoint tests', () => {
           id: userId,
           firstName: 'Emmet',
           lastName: 'Brickowski',
-          password: 'Everything1sAwsome'
+          password: password
         };
         const result = await createUser(newUser);
         expect(result).toEqual(expectedUser);
@@ -54,6 +56,11 @@ describe('Database and endpoint tests', () => {
       it('Shows a specific user', async () => {
         const result = await showUser(userId);
         expect(result).toEqual(expectedUser);
+      });
+
+      it('Performs a login', async () => {
+        token = await login(userId, password);
+        expect(token.length).toBeGreaterThan(0);
       });
     });
 
