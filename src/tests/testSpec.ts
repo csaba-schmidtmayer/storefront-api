@@ -1,10 +1,12 @@
 import db_client from '../db_conn';
 import { User, index as userIndex, show as showUser, create as createUser, login } from '../models/users';
-import { Category, index as categoryIndex, show as showCategory, create as createCategory } from '../models/categories';
+import { index as categoryIndex, show as showCategory, create as createCategory } from '../models/categories';
+import { Product, index as productIndex, show as showProduct, create as createProduct, categoryIndex as productsByCategory, showPopular } from '../models/products';
 
 describe('Database and endpoint tests', () => {
   const userId = 'emmet_lego';
-  let categoryId: number;
+  const categoryName = 'City';
+  let categoryId: number, productId: number;
 
   beforeAll(async () => {
     // Clear database
@@ -55,12 +57,11 @@ describe('Database and endpoint tests', () => {
     });
 
     describe('Category model tests', () => {
-      const name = 'City';
 
       it('Creates new category', async () => {
-        const result = await createCategory(name);
+        const result = await createCategory(categoryName);
         categoryId = result.id;
-        expect(result.name).toEqual(name);
+        expect(result.name).toEqual(categoryName);
       });
 
       it('Shows all available categories', async () => {
@@ -70,7 +71,37 @@ describe('Database and endpoint tests', () => {
 
       it('Shows a specific category', async () => {
         const result = await showCategory(categoryId.toString());
+        expect(result.name).toEqual(categoryName);
+      });
+    });
+
+    describe('Product model tests', () => {
+      const name = 'Deep Space Rocket and Launch Control';
+      const price = 9999;
+
+      it('Creates a new product', async () => {
+        const result = await createProduct(name, price, categoryId);
+        productId = result.id;
         expect(result.name).toEqual(name);
+        expect(result.price).toEqual(price);
+        expect(result.category.name).toEqual(categoryName);
+      });
+
+      it('Shows all available products', async () => {
+        const result = await productIndex();
+        expect(result.length).toEqual(1);
+      });
+
+      it('Shows a specific product', async () => {
+        const result = await showProduct(productId.toString());
+        expect(result.name).toEqual(name);
+        expect(result.price).toEqual(price);
+        expect(result.category.name).toEqual(categoryName);
+      });
+
+      it('Shows all products by category', async () => {
+        const result = await productsByCategory(categoryId);
+        expect(result.length).toEqual(1);
       });
     });
   });
