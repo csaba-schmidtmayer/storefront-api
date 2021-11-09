@@ -58,8 +58,7 @@ const show = async (id: string): Promise<Product> => {
 };
 
 const create = async (name: string, price: number, category: number): Promise<Product> => {
-  const nameNorm = name.toLowerCase();
-  const sql = `INSERT INTO products (name, price, category_id) VALUES ('${nameNorm}', ${price}, ${category}) RETURNING id;`;
+  const sql = `INSERT INTO products (name, price, category_id) VALUES ('${name}', ${price}, ${category}) RETURNING id;`;
 
   try {
     const conn = await db_client.connect();
