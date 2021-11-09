@@ -1,7 +1,11 @@
 import db_client from '../db_conn';
 import { User, index as userIndex, show as showUser, create as createUser, login } from '../models/users';
+import { Category, index as categoryIndex, show as showCategory, create as createCategory } from '../models/categories';
 
 describe('Database and endpoint tests', () => {
+  const userId = 'emmet_lego';
+  let categoryId: number;
+
   beforeAll(async () => {
     // Clear database
     const sql = 'DELETE FROM order_items *; ' +
@@ -22,16 +26,15 @@ describe('Database and endpoint tests', () => {
   describe('Model tests', () => {
 
     describe('User model tests', () => {
-      const id = 'emmet_lego';
       const expectedUser: User = {
-        id: id,
+        id: userId,
         firstName: 'Emmet',
         lastName: 'Brickowski'
       };
 
       it('Creates new user', async () => {
         const newUser: User = {
-          id: id,
+          id: userId,
           firstName: 'Emmet',
           lastName: 'Brickowski',
           password: 'Everything1sAwsome'
@@ -46,8 +49,28 @@ describe('Database and endpoint tests', () => {
       });
 
       it('Shows a specific user', async () => {
-        const result = await showUser(id);
+        const result = await showUser(userId);
         expect(result).toEqual(expectedUser);
+      });
+    });
+
+    describe('Category model tests', () => {
+      const name = 'City';
+
+      it('Creates new category', async () => {
+        const result = await createCategory(name);
+        categoryId = result.id;
+        expect(result.name).toEqual(name);
+      });
+
+      it('Shows all available categories', async () => {
+        const result = await categoryIndex();
+        expect(result.length).toEqual(1);
+      });
+
+      it('Shows a specific category', async () => {
+        const result = await showCategory(categoryId.toString());
+        expect(result.name).toEqual(name);
       });
     });
   });
