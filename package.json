@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "watch": "tsc-watch --onSuccess \"node ./build/server.js\"",
-    "test": "set NODE_ENV=${NODE_ENV:=test} && jasmine-ts \"./src/tests/**/*Spec.ts\" --config \"./src/spec/support/jasmine.json\""
+    "test": "set NODE_ENV=test&& jasmine-ts \"./src/tests/**/*Spec.ts\" --config \"./src/spec/support/jasmine.json\""
   },
   "author": "csaba-schmidtmayer",
   "license": "ISC",
