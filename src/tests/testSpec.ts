@@ -177,5 +177,32 @@ describe('Database and endpoint tests', () => {
           .expect(200);
       });
     });
+
+    describe('Product endpoint tests', () => {
+      it('GET /products', async () => {
+        request
+          .get('/products')
+          .set(headers)
+          .expect('Content-Type', /json/)
+          .expect(200);
+      });
+
+      it('GET /products/:id', async () => {
+        request
+          .post(`/categories/${productId}`)
+          .set(headers)
+          .expect('Content-Type', /json/)
+          .expect(200);
+      });
+
+      it('POST /categories', async () => {
+        request
+          .post('/categories')
+          .set(headers)
+          .send({'name': 'Burger Bar Fire Rescue', 'price': 3999, 'category': categoryId})
+          .expect('Content-Type', /json/)
+          .expect(200);
+      });
+    });
   });
 });
