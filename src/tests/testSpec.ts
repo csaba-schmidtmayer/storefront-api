@@ -229,5 +229,28 @@ describe('Database and endpoint tests', () => {
         expect(response.status).toEqual(200);
       });
     });
+
+    describe('Order endpoint tests', () => {
+
+      it('GET /users/:id/orders', async () => {
+        const response = await request
+          .get(`/users/${userId}/orders`)
+          .set({'Authorization': `Bearer ${token}`});
+        expect(response.status).toEqual(200);
+      });
+
+      it('POST /users/:id/orders', async () => {
+        const response = await request
+          .post(`/users/${userId}/orders`)
+          .set({'Authorization': `Bearer ${token}`})
+          .send([
+            {
+              'productId': productId,
+              'quantity': 3
+            }
+          ]);
+        expect(response.status).toEqual(200);
+      });
+    });
   });
 });
