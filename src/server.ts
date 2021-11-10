@@ -4,6 +4,7 @@ import cors from 'cors';
 import categories from './routes/categories';
 import products from './routes/products';
 import users from './routes/users';
+import checkAdmin from './helpers/checkAdmin';
 
 const app = express();
 
@@ -20,10 +21,13 @@ app.get('*', (req, res) => {
   res.json('works').send();
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`app is running on port ${PORT}`);
-});
+// Check existance of an admin user and start the server
+checkAdmin()
+  .then(() => {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`app is running on port ${PORT}`);
+    });
+  });
 
 export default app;
