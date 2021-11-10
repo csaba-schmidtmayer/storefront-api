@@ -170,6 +170,7 @@ describe('Database and endpoint tests', () => {
     });
 
     describe('Product endpoint tests', () => {
+
       it('GET /products', async () => {
         const response = await request
           .get('/products');
@@ -187,6 +188,44 @@ describe('Database and endpoint tests', () => {
           .post('/products')
           .set({'Authorization': `Bearer ${token}`})
           .send({'name': 'Burger Bar Fire Rescue', 'price': 3999, 'category': categoryId});
+        expect(response.status).toEqual(200);
+      });
+    });
+
+    describe('User endpoint tests', () => {
+
+      it('GET /users', async () => {
+        const response = await request
+          .get('/users')
+          .set({'Authorization': `Bearer ${token}`});
+        expect(response.status).toEqual(200);
+      });
+
+      it('GET /users/:id', async () => {
+        const response = await request
+          .get(`/users/${userId}`)
+          .set({'Authorization': `Bearer ${token}`});
+        expect(response.status).toEqual(200);
+      });
+
+      it('POST /users', async () => {
+        const response = await request
+          .post('/users')
+          .set({'Authorization': `Bearer ${token}`})
+          .send({
+            'id': 'unikitty',
+            'firstName': 'Uni',
+            'lastName': 'Kitty',
+            'password': 'CloudCuckooLand!'
+          });
+        expect(response.status).toEqual(200);
+      });
+
+      it('POST /users/:id', async () => {
+        const response = await request
+          .post(`/users/${userId}`)
+          .set({'Authorization': `Bearer ${token}`})
+          .send({'password': 'Everything1sAwsome'});
         expect(response.status).toEqual(200);
       });
     });
