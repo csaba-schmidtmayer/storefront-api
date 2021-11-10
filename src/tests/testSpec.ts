@@ -11,7 +11,7 @@ describe('Database and endpoint tests', () => {
   const userId = 'emmet_lego';
   const categoryName = 'City';
   let categoryId: number, productId: number;
-  let token: string = 'Bearer ';
+  let token: string;
 
   beforeAll(async () => {
     // Clear database
@@ -62,7 +62,7 @@ describe('Database and endpoint tests', () => {
       });
 
       it('Performs a login', async () => {
-        token += await login(userId, password);
+        token = await login(userId, password);
         expect(token.length).toBeGreaterThan(0);
       });
     });
@@ -145,63 +145,49 @@ describe('Database and endpoint tests', () => {
 
   describe('Endpoint tests', () => {
     const request = supertest(app);
-    const headers = {
-      'Authorization': token,
-      'Accept': 'application/json'
-    };
 
     describe('Category endpoint tests', () => {
 
       it('GET /categories', async () => {
-        request
-          .get('/categories')
-          .set(headers)
-          .expect('Content-Type', /json/)
-          .expect(200);
+        const response = await request
+          .get('/categories');
+        expect(response.status).toEqual(200);
       });
 
       it('GET /categories/:id', async () => {
-        request
-          .post(`/categories/${categoryId}`)
-          .set(headers)
-          .expect('Content-Type', /json/)
-          .expect(200);
+        const response = await request
+          .get(`/categories/${categoryId}`);
+        expect(response.status).toEqual(200);
       });
 
       it('POST /categories', async () => {
-        request
+        const response = await request
           .post('/categories')
-          .set(headers)
-          .send({'name': 'Ideas'})
-          .expect('Content-Type', /json/)
-          .expect(200);
+          .set({'Authorization': `Bearer ${token}`})
+          .send({'name': 'Ideas'});
+        expect(response.status).toEqual(200);
       });
     });
 
     describe('Product endpoint tests', () => {
       it('GET /products', async () => {
-        request
-          .get('/products')
-          .set(headers)
-          .expect('Content-Type', /json/)
-          .expect(200);
+        const response = await request
+          .get('/products');
+        expect(response.status).toEqual(200);
       });
 
       it('GET /products/:id', async () => {
-        request
-          .post(`/categories/${productId}`)
-          .set(headers)
-          .expect('Content-Type', /json/)
-          .expect(200);
+        const response = await request
+          .get(`/categories/${productId}`);
+        expect(response.status).toEqual(200);
       });
 
-      it('POST /categories', async () => {
-        request
-          .post('/categories')
-          .set(headers)
-          .send({'name': 'Burger Bar Fire Rescue', 'price': 3999, 'category': categoryId})
-          .expect('Content-Type', /json/)
-          .expect(200);
+      it('POST /products', async () => {
+        const response = await request
+          .post('/products')
+          .set({'Authorization': `Bearer ${token}`})
+          .send({'name': 'Burger Bar Fire Rescue', 'price': 3999, 'category': categoryId});
+        expect(response.status).toEqual(200);
       });
     });
   });
