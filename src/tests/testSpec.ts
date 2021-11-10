@@ -4,8 +4,8 @@ import db_client from '../db_conn';
 import app from '../server';
 import { User, index as userIndex, show as showUser, create as createUser, login } from '../models/users';
 import { index as categoryIndex, show as showCategory, create as createCategory } from '../models/categories';
-import { Product, index as productIndex, show as showProduct, create as createProduct, categoryIndex as productsByCategory, showPopular } from '../models/products';
-import { Order, showActive, showCompleted, create as createOrder } from '../models/orders';
+import { index as productIndex, show as showProduct, create as createProduct, categoryIndex as productsByCategory, showPopular } from '../models/products';
+import { showActive, showCompleted, create as createOrder } from '../models/orders';
 
 describe('Database and endpoint tests', () => {
   const userId = 'emmet_lego';
