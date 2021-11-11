@@ -53,7 +53,6 @@ describe('Database and endpoint tests', () => {
 
       it('Shows all available users', async () => {
         const result = await userIndex();
-        console.log(result);
         // Depending on the execution order of the async admin creation in server, an admin user might or might not be already created at this point
         expect(result.length).toBeGreaterThanOrEqual(1);
         expect(result.length).toBeLessThan(3);
