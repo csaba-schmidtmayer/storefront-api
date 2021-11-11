@@ -388,3 +388,62 @@ Yes
 | order_id | integer | foreign key referencing orders.id |
 | product_id | integer | foreign key referencing products.id |
 | quantity | integer | not null,  default=1 |
+
+## Data Shapes
+
+### Category
+
+```json
+{
+  "id": "number: The category id",
+  "name": "string: The category name"
+}
+```
+
+### Product
+
+```json
+{
+  "id": "number: The product id",
+  "name": "string: The product name",
+  "price": "number: The product price",
+  "category": {
+      "id": "number: The id of the category the product belongs to",
+      "name": "number: The name of the category the product belongs to"
+  }
+}
+```
+
+### User
+
+```json
+{
+  "id": "string: The user id (username)",
+  "firstName": "string: The first name of the user.",
+  "lastName": "string: The last name of the user",
+  "password": "string: (Optional, only used when creating a new user) The password of the user"
+}
+```
+
+### Order
+
+```json
+{
+  "id": "number: The order id",
+  "userId": "string: The user id (username)",
+  "status": "string: The status of the order (active/completed)",
+  "products": [{
+    "product": {
+      "id": "number: The product id",
+      "name": "string: The product name",
+      "price": "number: The product price",
+      "category": {
+          "id": "number: The id of the category the product belongs to",
+          "name": "number: The name of the category the product belongs to"
+      }
+    },
+    "quantity": "number: The quantity ordered from the specified product"
+  }],
+  "basketValue": "number: The total basket value of the order"
+}
+```
