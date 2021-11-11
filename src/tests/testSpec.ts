@@ -53,7 +53,7 @@ describe('Database and endpoint tests', () => {
 
       it('Shows all available users', async () => {
         const result = await userIndex();
-        expect(result.length).toEqual(1);
+        expect(result.length).toEqual(2);
       });
 
       it('Shows a specific user', async () => {
