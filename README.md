@@ -18,6 +18,8 @@ db-migrate is installed globally.
 4. Create a development and a test database in PostgreSQL.
 5. Rename `template.env` to `.env` and fill in the values of the environment variables.
 
+  The function of each variable is described after the equal sign, starting with //. Change these descriptions to the actual values. The database variables depend on how PostgreSQL is set up on your machine and how you created the databases in Step 4.
+
   **Note:** The NODE_ENV variable is preset to dev. The test scripts are called with setting its value in the scope of the script to test. This controls which database are used in which environment (dev database in dev environment, test database in test environment).
 
 6. Run the migrations on both databases:
